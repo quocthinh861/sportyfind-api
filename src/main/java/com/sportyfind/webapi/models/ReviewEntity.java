@@ -12,14 +12,17 @@ import java.time.LocalDateTime;
 @Table(name = "review")
 public class ReviewEntity {
     @Id
-    @ManyToOne
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "reviewid")
+    private int reviewId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venueid")
     private VenueEntity venue;
 
-    @Id
-    @ManyToOne
-    @JoinColumn(name = "customerid")
-    private CustomerEntity customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userid")
+    private UserEntity customer;
 
     @Column(name = "createddate")
     private LocalDateTime createdDate;

@@ -5,8 +5,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -17,10 +17,6 @@ public class VenueEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "venueid")
     private Integer venueId;
-
-    @ManyToOne
-    @JoinColumn(name = "ownerid")
-    private OwnerEntity owner;
 
     @Column(name = "venuename")
     private String venueName;
@@ -39,4 +35,7 @@ public class VenueEntity {
 
     @Column(name = "closinghour")
     private LocalTime closingHour;
+
+    @OneToMany(mappedBy = "venue")
+    private List<ReviewEntity> reviews;
 }

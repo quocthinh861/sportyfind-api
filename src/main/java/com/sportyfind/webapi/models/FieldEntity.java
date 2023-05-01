@@ -17,15 +17,15 @@ public class FieldEntity {
     @Column(name = "fieldname")
     private String fieldName;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fieldtypeid")
     private FieldTypeEntity fieldType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "venueid")
     private VenueEntity venue;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sportid")
     private SportEntity sport;
 

@@ -14,7 +14,7 @@ public class FieldTypeEntity {
     @Column(name = "fieldtypeid")
     private Integer fieldTypeId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sportid")
     private SportEntity sport;
 
