@@ -16,6 +16,11 @@ repositories {
 
 dependencies {
 	implementation(kotlin("stdlib"))
+
+	// Spring Security
+	implementation("org.springframework.boot:spring-boot-starter-security")
+
+	// Swagger
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("io.springfox:springfox-boot-starter:3.0.0")
 
