@@ -17,6 +17,6 @@ public class UserService {
     }
 
     public UserEntity checkLogin(String username, String password) {
-        return userRepository.findByUsernameAndPassword(username, password);
+        return null;
     }
 }

@@ -11,8 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
-@Configuration
-public class WebSecurityConfig {
+//@Configuration
+public class BasicAuthSecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -29,16 +29,16 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
+    public UserDetailsService userDetailsService(DataSource dataSource, BCryptPasswordEncoder passwordEncoder) {
         var user = org.springframework.security.core.userdetails.User.withUsername("user")
                 .password("{noop}password")
-                .passwordEncoder(password -> passwordEncoder().encode(password))
+                .passwordEncoder(passwordEncoder::encode)
                 .roles("USER")
                 .build();
 
         var admin = org.springframework.security.core.userdetails.User.withUsername("admin")
                 .password("{noop}password")
-                .passwordEncoder(password -> passwordEncoder().encode(password))
+                .passwordEncoder(passwordEncoder::encode)
                 .roles("ADMIN")
                 .build();
 
