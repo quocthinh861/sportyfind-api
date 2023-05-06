@@ -1,9 +1,8 @@
 package com.sportyfind.webapi.jwt;
 
-import com.sportyfind.webapi.services.CustomUserDetail;
+import com.sportyfind.webapi.services.CustomUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtTokenProvider tokenProvider;
 
     @Autowired
-    private CustomUserDetail customUserDetailsService;
+    private CustomUserDetailService customUserDetailsServiceService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -36,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Lấy username từ chuỗi jwt
                 String username = tokenProvider.getUserNameFromJwtToken(jwt);
                 // Lấy thông tin người dùng từ username
-                UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = customUserDetailsServiceService.loadUserByUsername(username);
                  if (userDetails != null) {
                      // Nếu người dùng hợp lệ, set thông tin cho Seturity Context
                      UsernamePasswordAuthenticationToken
