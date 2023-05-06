@@ -21,4 +21,12 @@ public class RoleEntity {
 
     @ManyToMany(mappedBy = "roles")
     private List<UserEntity> users;
+
+    public RoleEntity(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public RoleEntity() {
+    }
 }

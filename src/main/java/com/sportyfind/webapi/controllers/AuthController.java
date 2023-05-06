@@ -7,6 +7,8 @@ import com.sportyfind.webapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -85,7 +87,18 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public String test() {
-        return "test";
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Object> test() {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.message = "Test thành công!";
+            return new ResponseEntity<>(response, status);
+        } catch (Exception e) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = e;
+            return new ResponseEntity<>(response, status);
+        }
     }
 }
