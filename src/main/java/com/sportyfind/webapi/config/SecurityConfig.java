@@ -16,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -38,11 +39,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .cors(corCustomizer -> {
+                    CorsConfigurationSource source = request -> {
+                        var cors = new org.springframework.web.cors.CorsConfiguration();
+                        cors.setAllowCredentials(true);
+                        cors.addAllowedOriginPattern("*");
+                        cors.addAllowedHeader("*");
+                        cors.addAllowedMethod("*");
+                        return cors;
+                    };
+                    corCustomizer.configurationSource(source);
+                })
+                .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().antMatchers("/auth/**").permitAll()
+                .and()
+                .authorizeRequests().antMatchers("/auth/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
