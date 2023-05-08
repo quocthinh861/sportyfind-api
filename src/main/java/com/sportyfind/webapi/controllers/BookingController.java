@@ -3,18 +3,13 @@ package com.sportyfind.webapi.controllers;
 import com.sportyfind.webapi.dtos.ErrorResponseDto;
 import com.sportyfind.webapi.dtos.FieldBookingDto;
 import com.sportyfind.webapi.dtos.SuccessResponseDto;
-import com.sportyfind.webapi.models.FieldBookingEntity;
-import com.sportyfind.webapi.repositories.FieldBookingRepository;
+import com.sportyfind.webapi.models.SearchBookingQuery;
 import com.sportyfind.webapi.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Time;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/booking")
@@ -46,6 +41,21 @@ public class BookingController {
         try {
             var response = new SuccessResponseDto();
             response.result = bookingService.getBookingByCustomerId(customerId);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
+    @PostMapping("/searchBooking")
+    public ResponseEntity<Object> searchBooking(@RequestBody SearchBookingQuery query) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = bookingService.searchBooking(query);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;

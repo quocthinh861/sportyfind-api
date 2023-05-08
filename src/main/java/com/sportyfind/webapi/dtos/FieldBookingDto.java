@@ -3,9 +3,11 @@ package com.sportyfind.webapi.dtos;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sportyfind.webapi.Utils.CustomTimeUtil;
-import com.sportyfind.webapi.models.FieldBookingEntity;
-import com.sportyfind.webapi.models.FieldEntity;
-import com.sportyfind.webapi.models.UserEntity;
+import com.sportyfind.webapi.entities.FieldBookingEntity;
+import com.sportyfind.webapi.entities.FieldEntity;
+import com.sportyfind.webapi.entities.UserEntity;
+
+import java.util.List;
 
 
 public class FieldBookingDto {
@@ -38,7 +40,10 @@ public class FieldBookingDto {
     public UserEntity customer;
 
     @JsonProperty("fieldName")
-    public String FieldName;
+    public String fieldName;
+
+    @JsonProperty("price")
+    public double price;
 
     public void loadFromEntity(FieldBookingEntity entity) {
         this.bookingId = entity.getFieldBookingId();
@@ -46,7 +51,17 @@ public class FieldBookingDto {
         this.endTime = entity.getEndTime().toString();
         this.bookingStatus = entity.getBookingStatus();
         this.bookingDate = CustomTimeUtil.formatDateToString(entity.getBookingDate());
-//        this.fieldId = entity.getField().getFieldId();
-//        this.customerId = entity.getCustomer().getId();
+        this.fieldName = entity.getField().getFieldName();
+        this.price = entity.calculatePrice();
+    }
+
+    public static FieldBookingDto fromEntity(FieldBookingEntity entity) {
+        var result = new FieldBookingDto();
+        result.loadFromEntity(entity);
+        return result;
+    }
+
+    public static List<FieldBookingDto> fromEntities(List<FieldBookingEntity> entities) {
+        return entities.stream().map(FieldBookingDto::fromEntity).toList();
     }
 }

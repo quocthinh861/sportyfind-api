@@ -1,8 +1,7 @@
-package com.sportyfind.webapi.models;
+package com.sportyfind.webapi.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.sportyfind.webapi.services;
 
-import com.sportyfind.webapi.models.UserEntity;
+import com.sportyfind.webapi.entities.UserEntity;
 import com.sportyfind.webapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,12 +1,10 @@
-package com.sportyfind.webapi.models;
+package com.sportyfind.webapi.entities;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -38,4 +36,13 @@ public class FieldBookingEntity {
 
     @Column(name = "bookingstatus")
     private String bookingStatus;
+
+    @Column(name = "isdeleted")
+    private boolean isDeleted;
+
+    public double calculatePrice() {
+        double diff = this.endTime.getTime() - this.startTime.getTime();
+        double diffInHours = diff / (60.0 * 60.0 * 1000.0); // convert milliseconds to hours with floating point
+        return diffInHours * this.field.getHourlyRate();
+    }
 }

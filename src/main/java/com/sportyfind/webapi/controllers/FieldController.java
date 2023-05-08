@@ -2,7 +2,7 @@ package com.sportyfind.webapi.controllers;
 
 import com.sportyfind.webapi.dtos.ErrorResponseDto;
 import com.sportyfind.webapi.dtos.SuccessResponseDto;
-import com.sportyfind.webapi.models.FieldEntity;
+import com.sportyfind.webapi.entities.FieldEntity;
 import com.sportyfind.webapi.repositories.FieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

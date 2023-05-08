@@ -10,4 +10,11 @@ public class CustomTimeUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.format(date);
     }
+
+    public static Date formatStringToDate (String date) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        return formatter.parse(date);
+    }
+
+
 }

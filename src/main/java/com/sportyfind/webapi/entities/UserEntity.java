@@ -1,4 +1,4 @@
-package com.sportyfind.webapi.models;
+package com.sportyfind.webapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;

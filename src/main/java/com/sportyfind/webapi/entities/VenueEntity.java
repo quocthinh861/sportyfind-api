@@ -1,4 +1,4 @@
-package com.sportyfind.webapi.models;
+package com.sportyfind.webapi.entities;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
-import java.time.LocalTime;
 import java.util.List;
 
 @Entity

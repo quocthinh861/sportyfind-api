@@ -2,12 +2,10 @@ package com.sportyfind.webapi.controllers;
 
 import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.jwt.JwtTokenProvider;
-import com.sportyfind.webapi.models.UserEntity;
+import com.sportyfind.webapi.entities.UserEntity;
 import com.sportyfind.webapi.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
