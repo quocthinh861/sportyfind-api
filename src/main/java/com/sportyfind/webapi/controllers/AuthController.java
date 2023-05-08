@@ -50,7 +50,10 @@ public class AuthController {
             String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
 
             // Trả về jwt cho người dùng.
-            response.result = AuthLoginResDto.builder().token(token).build();
+            response.result = AuthLoginResDto.builder()
+                    .token(token)
+                    .user(authentication.getPrincipal())
+                    .build();
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             var response = new ErrorResponseDto();

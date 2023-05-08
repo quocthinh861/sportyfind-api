@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -31,10 +32,10 @@ public class VenueEntity {
     private BigDecimal longitude;
 
     @Column(name = "openinghour")
-    private LocalTime openingHour;
+    private Time openingHour;
 
     @Column(name = "closinghour")
-    private LocalTime closingHour;
+    private Time closingHour;
 
     @OneToMany(mappedBy = "venue")
     private List<ReviewEntity> reviews;

@@ -4,7 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -24,11 +27,14 @@ public class FieldBookingEntity {
     @JoinColumn(name = "customerid")
     private UserEntity customer;
 
+    @Column(name = "bookingdate")
+    private Date bookingDate;
+
     @Column(name = "starttime")
-    private LocalDateTime startTime;
+    private Time startTime;
 
     @Column(name = "endtime")
-    private LocalDateTime endTime;
+    private Time endTime;
 
     @Column(name = "bookingstatus")
     private String bookingStatus;

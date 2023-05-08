@@ -9,4 +9,5 @@ import lombok.Setter;
 @Builder
 public class AuthLoginResDto {
     public String token;
+    public Object user;
 }
