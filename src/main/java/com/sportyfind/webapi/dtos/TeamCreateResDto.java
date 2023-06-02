@@ -10,12 +10,14 @@ public class TeamCreateResDto {
     public String description;
     public int rankingpoint;
     public int skilllevel;
+    public int id;
 
     public void loadFromEntity(TeamEntity entity) {
         this.name = entity.getName();
         this.description = entity.getDescription();
         this.rankingpoint = entity.getRankingpoint();
         this.skilllevel = entity.getSkilllevel();
+        this.id = entity.getId();
     }
 
 

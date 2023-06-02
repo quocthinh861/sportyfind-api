@@ -10,6 +10,5 @@ import java.util.List;
 public interface TeamRequestRepository extends JpaRepository<TeamRequestEntity, Integer> {
 
     List<TeamRequestEntity> findByTeamId(int teamId);
-
-
+    TeamRequestEntity findByUserIdAndTeamId(Long user_id, int team_id);
 }

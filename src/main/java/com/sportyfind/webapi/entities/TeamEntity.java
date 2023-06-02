@@ -34,7 +34,7 @@ public class TeamEntity {
     private String logo;
 
     @Column(name = "rankingorder")
-    private long rankingorder;
+    private int rankingorder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "captainid")
