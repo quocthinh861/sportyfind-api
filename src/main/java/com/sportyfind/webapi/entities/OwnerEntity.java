@@ -1,5 +1,4 @@
 package com.sportyfind.webapi.entities;
-
 import lombok.Getter;
 import lombok.Setter;
 

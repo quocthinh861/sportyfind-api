@@ -28,6 +28,12 @@ public class UserEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<RoleEntity> roles;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_team",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "team_id", referencedColumnName = "id")})
+    private List<TeamEntity> teams;
+
     public UserEntity() {
         this.roles = List.of(new RoleEntity(1L, "ROLE_USER"));
     }
