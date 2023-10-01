@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
@@ -36,7 +37,6 @@ public class TeamEntity {
     @Column(name = "rankingorder")
     private int rankingorder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "captainid")
-    private UserEntity captain;
+    @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
+    private List<UserEntity> users;
 }

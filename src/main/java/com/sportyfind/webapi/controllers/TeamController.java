@@ -4,15 +4,14 @@ import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.entities.TeamEntity;
 import com.sportyfind.webapi.entities.TeamRequestEntity;
 import com.sportyfind.webapi.entities.UserEntity;
-import com.sportyfind.webapi.repositories.FieldRepository;
 import com.sportyfind.webapi.repositories.TeamRepository;
+import com.sportyfind.webapi.repositories.UserTeamRepository;
 import com.sportyfind.webapi.repositories.UserRepository;
 import com.sportyfind.webapi.services.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,14 +28,35 @@ public class TeamController {
     private UserRepository userRepository;
 
     @Autowired
+    private UserTeamRepository teamUserRepository;
+
+    @Autowired
     private TeamService teamService;
 
-    @GetMapping("/getTeamListByCaptainId")
-    public ResponseEntity<Object> getTeamListByCaptainId(@RequestParam Long captainId) {
+    @GetMapping("/getTeamList")
+    public ResponseEntity<Object> getTeamList(boolean isClearCache) {
         HttpStatus status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
-            List<TeamEntity> teamList = teamRepository.findByCaptainId(captainId);
+            List<TeamEntity> teamList = teamService.getAllTeams();
+            response.result = TeamCreateResDto.fromEntities(teamList);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(null, status);
+        }
+    }
+
+
+
+    @GetMapping("/getTeamListByUserId")
+    public ResponseEntity<Object> getTeamListByCaptainId(@RequestParam Long userId) {
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            List<TeamEntity> teamList = teamService.getAllTeamsByUserId(userId);
             response.result = TeamCreateResDto.fromEntities(teamList);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
@@ -71,7 +91,6 @@ public class TeamController {
             UserEntity customer = userRepository.findById(reqDto.captainid)
                     .orElseThrow(() -> new Exception("Customer not found"));
             TeamEntity teamEntity = new TeamEntity();
-            teamEntity.setCaptain(customer);
             teamEntity.setName(reqDto.name);
             teamEntity.setLogo(reqDto.logo);
             teamEntity.setDescription(reqDto.description);
@@ -96,7 +115,7 @@ public class TeamController {
         try {
             var response = new SuccessResponseDto();
             List<TeamRequestEntity> teamList = teamService.getAllTeamRequestsByTeamId(teamId);
-            response.result = teamList;
+            response.result = TeamRequestCreateResDto.fromEntities(teamList);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;
@@ -127,8 +146,7 @@ public class TeamController {
         HttpStatus status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
-            TeamRequestCreateResDto teamRequestEntity = teamService.getTeamRequestByUserIdAndTeamId(userId, teamId);
-            response.result = teamRequestEntity;
+            response.result = teamService.getTeamRequestByUserIdAndTeamId(userId, teamId);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;
@@ -137,5 +155,4 @@ public class TeamController {
             return new ResponseEntity<>(null, status);
         }
     }
-
 }

@@ -2,10 +2,10 @@ package com.sportyfind.webapi.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sportyfind.webapi.Utils.CustomTimeUtil;
 import com.sportyfind.webapi.entities.FieldBookingEntity;
 import com.sportyfind.webapi.entities.FieldEntity;
 import com.sportyfind.webapi.entities.UserEntity;
+import com.sportyfind.webapi.util.TimeUtil;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class FieldBookingDto {
         this.startTime = entity.getStartTime().toString();
         this.endTime = entity.getEndTime().toString();
         this.bookingStatus = entity.getBookingStatus();
-        this.bookingDate = CustomTimeUtil.formatDateToString(entity.getBookingDate());
+        this.bookingDate = TimeUtil.formatDateToString(entity.getBookingDate());
         this.fieldName = entity.getField().getFieldName();
         this.price = entity.calculatePrice();
     }

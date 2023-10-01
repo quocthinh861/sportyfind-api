@@ -1,6 +1,7 @@
 package com.sportyfind.webapi.services;
 
 import com.sportyfind.webapi.entities.UserEntity;
+import com.sportyfind.webapi.models.CustomUserDetails;
 import com.sportyfind.webapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +30,8 @@ public class CustomUserDetailService implements UserDetailsService {
         List<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
-        return new User(user.getUsername(), user.getPassword(), authorities);
+        CustomUserDetails userDetails = new CustomUserDetails(user.getUsername(), user.getPassword(), authorities);
+        userDetails.id = user.getId();
+        return userDetails;
     }
 }

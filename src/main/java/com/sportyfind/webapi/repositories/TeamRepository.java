@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface TeamRepository extends JpaRepository<TeamEntity, Integer> {
-    List<TeamEntity> findByCaptainId(Long captainId);
 }

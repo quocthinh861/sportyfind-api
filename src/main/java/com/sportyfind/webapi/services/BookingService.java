@@ -1,6 +1,5 @@
 package com.sportyfind.webapi.services;
 
-import com.sportyfind.webapi.Utils.CustomTimeUtil;
 import com.sportyfind.webapi.dtos.FieldBookingDto;
 import com.sportyfind.webapi.entities.FieldBookingEntity;
 import com.sportyfind.webapi.entities.FieldEntity;
@@ -9,13 +8,12 @@ import com.sportyfind.webapi.models.SearchBookingQuery;
 import com.sportyfind.webapi.repositories.FieldBookingRepository;
 import com.sportyfind.webapi.repositories.FieldRepository;
 import com.sportyfind.webapi.repositories.UserRepository;
+import com.sportyfind.webapi.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -59,8 +57,8 @@ public class BookingService {
     }
 
     public List<FieldBookingDto> searchBooking(SearchBookingQuery query) throws Exception {
-        Date beginDate = CustomTimeUtil.formatStringToDate(query.beginDate);
-        Date endDate = CustomTimeUtil.formatStringToDate(query.endDate);
+        Date beginDate = TimeUtil.formatStringToDate(query.beginDate);
+        Date endDate = TimeUtil.formatStringToDate(query.endDate);
 
         var data = fieldBookingRepository.searchFieldBookingWithQuery(query.customerId, query.fieldId, beginDate, endDate);
         return FieldBookingDto.fromEntities(data);

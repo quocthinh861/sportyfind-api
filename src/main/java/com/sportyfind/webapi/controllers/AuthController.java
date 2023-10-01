@@ -4,6 +4,7 @@ import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.jwt.JwtTokenProvider;
 import com.sportyfind.webapi.entities.UserEntity;
 import com.sportyfind.webapi.repositories.UserRepository;
+import com.sportyfind.webapi.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     private final UserRepository userRepository;
+    private final UserService userService;
     private AuthenticationManager authenticationManager;
     private JwtTokenProvider jwtTokenProvider;
     private PasswordEncoder passwordEncoder;
@@ -26,12 +28,14 @@ public class AuthController {
             UserRepository userRepository,
             AuthenticationManager authenticationManager,
             JwtTokenProvider jwtTokenProvider,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            UserService userService
     ) {
         this.userRepository = userRepository;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -72,10 +76,7 @@ public class AuthController {
             }
 
             // Lưu thông tin đăng ký vào database.
-            UserEntity userEntity = new UserEntity();
-            userEntity.setUsername(authCreateReqDto.username);
-            userEntity.setPassword(passwordEncoder.encode(authCreateReqDto.password));
-            userRepository.save(userEntity);
+            userService.createUser(authCreateReqDto);
 
             response.message = "Đăng ký thành công!";
             return new ResponseEntity<>(response, status);

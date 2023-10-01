@@ -11,6 +11,8 @@ public class TeamCreateResDto {
     public int rankingpoint;
     public int skilllevel;
     public int id;
+    public int size;
+    public List<UserCreateResDto> users;
 
     public void loadFromEntity(TeamEntity entity) {
         this.name = entity.getName();
@@ -18,6 +20,8 @@ public class TeamCreateResDto {
         this.rankingpoint = entity.getRankingpoint();
         this.skilllevel = entity.getSkilllevel();
         this.id = entity.getId();
+        this.size = entity.getSize();
+        this.users = UserCreateResDto.fromEntities(entity.getUsers());
     }
 
 

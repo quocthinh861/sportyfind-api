@@ -1,5 +1,6 @@
 package com.sportyfind.webapi.entities;
 
+import jdk.jfr.Description;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,10 +29,14 @@ public class TeamRequestEntity {
     @JoinColumn(name = "team_id")
     private TeamEntity team;
 
+    @Description("0: pending, 1: accepted, 2: rejected")
     @Column(name = "status")
     private int status;
 
     @Column(name = "createddate")
     private Date createddate;
+
+    @Column(name = "updateddate")
+    private Date updateddate;
 }
 
