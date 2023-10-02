@@ -9,7 +9,9 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
-@Table(name = "game_match")
+@Table(name = "game_match", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"team_a_id", "field_booking_id"})
+})
 public class GameMatchEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,11 +19,11 @@ public class GameMatchEntity {
     private int id;
 
     @ManyToOne
-    @JoinColumn(name = "team_A_id")
+    @JoinColumn(name = "team_a_id")
     private TeamEntity teamA;
 
     @ManyToOne
-    @JoinColumn(name = "team_B_id")
+    @JoinColumn(name = "team_b_id")
     private TeamEntity teamB;
 
     @ManyToOne
@@ -32,7 +34,6 @@ public class GameMatchEntity {
     private int status = 1;
 
     @Column(name = "created_at")
-
     private Date createdAt;
 
     @Column(name = "description")

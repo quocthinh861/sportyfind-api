@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class GameService {
@@ -25,6 +26,11 @@ public class GameService {
 
     @Autowired
     private FieldBookingRepository fieldBookingRepository;
+
+    public List<GameMatchCreateResDto> getAllGameMatch() {
+        List<GameMatchEntity> gameMatchEntities = gameMatchRepository.findAll();
+        return GameMatchCreateResDto.fromEntities(gameMatchEntities);
+    }
 
     public GameMatchCreateResDto createGameMatch(GameMatchCreateReqDto gameMatchDto) throws Exception {
         GameMatchEntity gameMatch = new GameMatchEntity();

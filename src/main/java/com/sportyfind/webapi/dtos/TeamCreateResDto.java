@@ -27,6 +27,7 @@ public class TeamCreateResDto {
 
 
     public static TeamCreateResDto fromEntity(TeamEntity entity) {
+        if(entity == null) return null;
         var result = new TeamCreateResDto();
         result.loadFromEntity(entity);
         return result;
