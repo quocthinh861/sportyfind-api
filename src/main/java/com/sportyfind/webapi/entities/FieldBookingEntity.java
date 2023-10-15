@@ -17,7 +17,7 @@ public class FieldBookingEntity {
     @Column(name = "fieldbookingid")
     private Integer fieldBookingId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fieldid")
     private FieldEntity field;
 

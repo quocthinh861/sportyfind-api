@@ -34,12 +34,12 @@ public class GameController {
         }
     }
 
-    @GetMapping("/getGameMatch")
-    public ResponseEntity<Object> getGameMatch() {
+    @GetMapping("/getListGameMatch")
+    public ResponseEntity<Object> getListGameMatch(int gameType) {
         var status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
-            response.result = gameService.getAllGameMatch();
+            response.result = gameService.getAllGameMatch(gameType);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;

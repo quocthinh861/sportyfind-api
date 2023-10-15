@@ -1,6 +1,7 @@
 package com.sportyfind.webapi.repositories;
 
 import com.sportyfind.webapi.entities.TeamEntity;
+import com.sportyfind.webapi.entities.UserEntity;
 import com.sportyfind.webapi.entities.UserTeamEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,4 +20,6 @@ public interface UserTeamRepository extends JpaRepository<UserTeamEntity, Long> 
 
     List<UserTeamEntity> findAllByUserId(long userId);
     UserTeamEntity findByUserIdAndTeamId(long userId, int teamId);
+
+    UserTeamEntity findByTeamIdAndRole(int teamId, String role);
 }

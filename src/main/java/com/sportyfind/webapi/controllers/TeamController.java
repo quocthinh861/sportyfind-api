@@ -106,6 +106,7 @@ public class TeamController {
             response.result = TeamCreateResDto.fromEntity(teamEntity);
             // Create a UserTeamEntity to represent the relationship
             UserTeamEntity userTeamEntity = new UserTeamEntity(customer, teamEntity);
+            userTeamEntity.setRole("CAPTAIN");
             userTeamRepository.save(userTeamEntity);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {

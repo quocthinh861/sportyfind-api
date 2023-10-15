@@ -34,7 +34,7 @@ public class FieldBookingDto {
     public String bookingDate;
 
     @JsonProperty("field")
-    public FieldEntity field;
+    public FieldCreateDto field;
 
     @JsonProperty("customer")
     public UserEntity customer;
@@ -52,6 +52,7 @@ public class FieldBookingDto {
         this.bookingStatus = entity.getBookingStatus();
         this.bookingDate = TimeUtil.formatDateToString(entity.getBookingDate());
         this.fieldName = entity.getField().getFieldName();
+        this.field = FieldCreateDto.fromEntity(entity.getField());
         this.price = entity.calculatePrice();
     }
 

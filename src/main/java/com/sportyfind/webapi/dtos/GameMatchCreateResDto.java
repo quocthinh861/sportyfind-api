@@ -7,6 +7,7 @@ import java.util.List;
 public class GameMatchCreateResDto {
     public TeamCreateResDto teamA;
     public TeamCreateResDto teamB;
+    public UserCreateResDto host;
     public FieldBookingDto booking;
     public String description;
 

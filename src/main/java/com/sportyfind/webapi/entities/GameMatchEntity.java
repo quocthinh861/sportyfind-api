@@ -1,5 +1,6 @@
 package com.sportyfind.webapi.entities;
 
+import jdk.jfr.Description;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,12 +31,17 @@ public class GameMatchEntity {
     @JoinColumn(name = "field_booking_id")
     private FieldBookingEntity fieldBooking;
 
-    @Column(name = "status")
-    private int status = 1;
-
     @Column(name = "created_at")
     private Date createdAt;
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "status")
+    @Description("0: canceled, 1: pending, 2: accepted, 3: rejected")
+    private int status = 0;
+
+    @Column(name = "game_type")
+    @Description("0: ranking, 1: internal")
+    private int gameType = 0;
 }
