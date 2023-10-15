@@ -4,6 +4,7 @@ import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.entities.TeamEntity;
 import com.sportyfind.webapi.entities.TeamRequestEntity;
 import com.sportyfind.webapi.entities.UserEntity;
+import com.sportyfind.webapi.entities.UserTeamEntity;
 import com.sportyfind.webapi.repositories.TeamRepository;
 import com.sportyfind.webapi.repositories.UserTeamRepository;
 import com.sportyfind.webapi.repositories.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,6 +34,9 @@ public class TeamController {
 
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserTeamRepository userTeamRepository;
 
     @GetMapping("/getTeamList")
     public ResponseEntity<Object> getTeamList(boolean isClearCache) {
@@ -96,10 +101,12 @@ public class TeamController {
             teamEntity.setDescription(reqDto.description);
             teamEntity.setRankingpoint(reqDto.rankingpoint);
             teamEntity.setSkilllevel(reqDto.skilllevel);
-            teamEntity.setSize(reqDto.size);
             teamEntity.setRankingorder(reqDto.rankingorder);
             teamEntity = teamRepository.save(teamEntity);
             response.result = TeamCreateResDto.fromEntity(teamEntity);
+            // Create a UserTeamEntity to represent the relationship
+            UserTeamEntity userTeamEntity = new UserTeamEntity(customer, teamEntity);
+            userTeamRepository.save(userTeamEntity);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;

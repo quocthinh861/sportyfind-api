@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +29,8 @@ public class BookingService {
 
     @Autowired
     private UserRepository userRepository;
+
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
 
     public FieldBookingDto createBooking(FieldBookingDto bookingDTO) throws Exception {
         var result = new FieldBookingDto();
@@ -43,8 +47,14 @@ public class BookingService {
         booking.setField(field);
         booking.setBookingDate(bookingDate);
         booking.setBookingStatus(bookingDTO.bookingStatus);
-        booking.setStartTime(Time.valueOf(bookingDTO.startTime));
-        booking.setEndTime(Time.valueOf(bookingDTO.endTime));
+        // Parse the input strings to LocalTime objects
+        LocalTime startTime = LocalTime.parse(bookingDTO.startTime, formatter);
+        LocalTime endTime = LocalTime.parse(bookingDTO.endTime, formatter);
+        // Convert LocalTime objects to Time objects
+        Time startTimeSql = Time.valueOf(startTime);
+        Time endTimeSql = Time.valueOf(endTime);
+        booking.setStartTime(startTimeSql);
+        booking.setEndTime(endTimeSql);
         fieldBookingRepository.save(booking);
 
         result.loadFromEntity(booking);

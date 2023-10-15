@@ -81,6 +81,15 @@ public class TeamService {
 
     public TeamRequestCreateResDto getTeamRequestByUserIdAndTeamId(long userId, int teamId) throws Exception {
         try {
+            // check user in team
+            UserTeamEntity userTeam = userTeamRepository.findByUserIdAndTeamId(userId, teamId);
+            if(userTeam != null) {
+                TeamRequestCreateResDto res =  new TeamRequestCreateResDto();
+                res.userId = userId;
+                res.teamId = teamId;
+                res.status = 2;
+                return res;
+            }
             TeamRequestEntity teamRequest =  teamRequestRepository.findByUserIdAndTeamId(userId, teamId);
             return teamRequest != null ? TeamRequestCreateResDto.fromEntity(teamRequest) : null;
         } catch (Exception ex) {

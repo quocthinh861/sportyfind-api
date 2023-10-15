@@ -3,7 +3,9 @@ package com.sportyfind.webapi.dtos;
 import com.sportyfind.webapi.entities.FieldBookingEntity;
 import com.sportyfind.webapi.entities.TeamEntity;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 public class TeamCreateResDto {
     public String name;
@@ -20,8 +22,8 @@ public class TeamCreateResDto {
         this.rankingpoint = entity.getRankingpoint();
         this.skilllevel = entity.getSkilllevel();
         this.id = entity.getId();
-        this.size = entity.getSize();
         this.users = UserCreateResDto.fromEntities(entity.getUsers());
+        this.size = Optional.ofNullable(entity.getUsers()).map(List::size).orElse(0);
     }
 
 

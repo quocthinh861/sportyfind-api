@@ -32,6 +32,7 @@ public class UserCreateResDto {
     }
 
     public static List<UserCreateResDto> fromEntities(List<UserEntity> entities) {
+        if(entities == null) return null;
         return entities.stream().map(UserCreateResDto::fromEntity).toList();
     }
 }

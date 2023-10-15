@@ -7,6 +7,7 @@ import com.sportyfind.webapi.entities.UserEntity;
 import com.sportyfind.webapi.repositories.RoleRepository;
 import com.sportyfind.webapi.repositories.UserRepository;
 //import com.sportyfind.webapi.util.CustomTimeUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class UserService {
     private UserRepository userRepository;
+    @Autowired
     private RoleRepository roleRepository;
     private PasswordEncoder passwordEncoder;
 
