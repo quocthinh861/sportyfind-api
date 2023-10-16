@@ -20,6 +20,7 @@ public class UserCreateResDto {
 
     public static UserCreateResDto fromEntity(UserEntity user) {
         UserCreateResDto dto = new UserCreateResDto();
+        dto.id = user.getId();
         dto.email = user.getEmail();
         dto.address = user.getAddress();
         dto.birthday = TimeUtil.formatDateToString(user.getBirthday());

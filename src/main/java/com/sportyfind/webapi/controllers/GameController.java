@@ -1,9 +1,6 @@
 package com.sportyfind.webapi.controllers;
 
-import com.sportyfind.webapi.dtos.ErrorResponseDto;
-import com.sportyfind.webapi.dtos.FieldBookingDto;
-import com.sportyfind.webapi.dtos.GameMatchCreateReqDto;
-import com.sportyfind.webapi.dtos.SuccessResponseDto;
+import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,6 +41,22 @@ public class GameController {
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;
             var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
+    @PostMapping("/updateGameRequest")
+    public ResponseEntity<Object> updateTeamRequest(@RequestBody GameRequestCreateReqDto reqDto) throws Exception {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = gameService.updateTeamRequest(reqDto);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            status = HttpStatus.BAD_REQUEST;
             response.errors = err;
             return new ResponseEntity<>(response, status);
         }

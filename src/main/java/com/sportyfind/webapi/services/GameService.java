@@ -1,10 +1,8 @@
 package com.sportyfind.webapi.services;
 
 import com.sportyfind.webapi.dtos.*;
-import com.sportyfind.webapi.entities.FieldBookingEntity;
-import com.sportyfind.webapi.entities.GameMatchEntity;
-import com.sportyfind.webapi.entities.TeamEntity;
-import com.sportyfind.webapi.entities.UserTeamEntity;
+import com.sportyfind.webapi.entities.*;
+import com.sportyfind.webapi.enums.REQ_ACTION;
 import com.sportyfind.webapi.models.GameMatchInfo;
 import com.sportyfind.webapi.repositories.FieldBookingRepository;
 import com.sportyfind.webapi.repositories.GameMatchRepository;
@@ -13,8 +11,10 @@ import com.sportyfind.webapi.repositories.UserTeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,16 +74,34 @@ public class GameService {
         return result;
     }
 
-    public List<GameMatchInfo> getListGameMatch() {
-        List<GameMatchEntity> gameMatchEntities = gameMatchRepository.findAll();
-        return gameMatchEntities.stream().map(gameMatch -> {
-            GameMatchInfo gameMatchInfo = new GameMatchInfo();
-            // get captain team A
-            UserTeamEntity userTeamEntity = userTeamRepository.findByTeamIdAndRole(gameMatch.getTeamA().getId(), "CAPTAIN");
-            gameMatchInfo.host = UserCreateResDto.fromEntity(userTeamEntity.getUser());
-            gameMatchInfo.loadFromEntity(gameMatch);
-
-            return gameMatchInfo;
-        }).toList();
+    @Transactional
+    public TeamRequestCreateResDto updateTeamRequest(GameRequestCreateReqDto reqDto) {
+        return null;
+//        var teamRequest = new TeamRequestEntity();
+//        if(reqDto.action == REQ_ACTION.CREATE) {
+//            UserEntity user = userRepository.findById(reqDto.userId).orElse(null);
+//            TeamEntity team = teamRepository.findById(reqDto.teamId).orElse(null);
+//            teamRequest.setUser(user);
+//            teamRequest.setTeam(team);
+//            teamRequest.setStatus(1);
+//            teamRequest.setCreateddate(new java.util.Date());
+//        } else if(Objects.equals(reqDto.action, "ACCEPT")) {
+//            teamRequest = teamRequestRepository.findByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
+//            teamRequest.setStatus(2);
+//            UserEntity user = userRepository.findById(reqDto.userId).orElse(null);
+//            TeamEntity team = teamRepository.findById(reqDto.teamId).orElse(null);
+//            var userTeam = new UserTeamEntity();
+//            userTeam.setUser(user);
+//            userTeam.setTeam(team);
+//            userTeamRepository.save(userTeam);
+//        } else if(Objects.equals(reqDto.action, "CANCEL")) {
+//            teamRequestRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
+//            return null;
+//        } else if(Objects.equals(reqDto.action, "REMOVE")) {
+//            teamRequestRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
+//            userTeamRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
+//            return null;
+//        }
+//        return TeamRequestCreateResDto.fromEntity(teamRequestRepository.save(teamRequest));
     }
 }
