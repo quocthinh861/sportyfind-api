@@ -39,4 +39,7 @@ public class TeamEntity {
 
     @ManyToMany(mappedBy = "teams", fetch = FetchType.EAGER)
     private List<UserEntity> users;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 }

@@ -38,7 +38,7 @@ public class GameMatchEntity {
     private String description;
 
     @Column(name = "status")
-    @Description("0: canceled, 1: pending, 2: accepted, 3: rejected")
+    @Description("0: created, 1: matched, 2: removed")
     private int status = 0;
 
     @Column(name = "game_type")

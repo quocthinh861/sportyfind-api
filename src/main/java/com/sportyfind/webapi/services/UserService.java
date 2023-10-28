@@ -75,4 +75,14 @@ public class UserService {
     public UserEntity checkLogin(String username, String password) {
         return null;
     }
+
+    public Object updateThumbnail(UserCreateResDto userCreateResDto) throws Exception {
+        UserEntity userEntity = userRepository.findById(userCreateResDto.id).orElse(null);
+        if(userEntity == null) {
+            throw new Exception("Cannot find user with id: " + userCreateResDto.id + " to update thumbnail");
+        }
+        userEntity.setThumbnail(userCreateResDto.thumbnail);
+        UserEntity user = userRepository.save(userEntity);
+        return userCreateResDto;
+    }
 }

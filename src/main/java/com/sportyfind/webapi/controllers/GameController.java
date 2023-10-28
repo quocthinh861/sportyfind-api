@@ -1,6 +1,7 @@
 package com.sportyfind.webapi.controllers;
 
 import com.sportyfind.webapi.dtos.*;
+import com.sportyfind.webapi.repositories.GameRequestRepository;
 import com.sportyfind.webapi.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ public class GameController {
 
     @Autowired
     private GameService gameService;
+    @Autowired
+    private GameRequestRepository gameRequestRepository;
 
     @PostMapping("/createMatch")
     public ResponseEntity<Object> createGame(@RequestBody GameMatchCreateReqDto gameDTO) {
@@ -46,12 +49,42 @@ public class GameController {
         }
     }
 
+    @GetMapping("/getGameRequestInfo")
+    public ResponseEntity<Object> getGameRequestInfo(@RequestParam int teamId, @RequestParam int gameId) {
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = GameRequestCreateResDto.fromEntity(gameRequestRepository.findByTeamIdAndGameId(teamId, gameId));
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(null, status);
+        }
+    }
+
+    @GetMapping("/getGameRequestList")
+    public ResponseEntity<Object> getGameRequestList(@RequestParam int gameId) {
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = gameService.getGameRequestByTeamId(gameId);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(null, status);
+        }
+    }
+
     @PostMapping("/updateGameRequest")
-    public ResponseEntity<Object> updateTeamRequest(@RequestBody GameRequestCreateReqDto reqDto) throws Exception {
+    public ResponseEntity<Object> updateGameRequest(@RequestBody GameRequestCreateReqDto reqDto) throws Exception {
         var status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
-            response.result = gameService.updateTeamRequest(reqDto);
+            response.result = gameService.updateGameRequest(reqDto);
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;

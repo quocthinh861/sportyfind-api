@@ -53,4 +53,22 @@ public class AccountController {
             return new ResponseEntity<>(response, status);
         }
     }
+
+    @PostMapping("/updateThumbnail")
+    public ResponseEntity<Object> updateThumbnail(@RequestBody UserCreateResDto userCreateResDto) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = userService.updateThumbnail(userCreateResDto);
+            if(response.result == null) {
+                status = HttpStatus.BAD_REQUEST;
+            }
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
 }

@@ -16,8 +16,10 @@ import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -41,12 +43,11 @@ public class BookingService {
                 .orElseThrow(() -> new Exception("Customer not found"));
 
         FieldBookingEntity booking = new FieldBookingEntity();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date bookingDate = dateFormat.parse(bookingDTO.bookingDate);
         booking.setCustomer(customer);
         booking.setField(field);
         booking.setBookingDate(bookingDate);
-        booking.setBookingStatus(bookingDTO.bookingStatus);
         // Parse the input strings to LocalTime objects
         LocalTime startTime = LocalTime.parse(bookingDTO.startTime, formatter);
         LocalTime endTime = LocalTime.parse(bookingDTO.endTime, formatter);
@@ -63,7 +64,11 @@ public class BookingService {
 
     public List<FieldBookingDto> getBookingByCustomerId(Long customerId) {
         var data = fieldBookingRepository.findByCustomerId(customerId);
-        return FieldBookingDto.fromEntities(data);
+        // Sort the data by booking date using Stream API
+        List<FieldBookingEntity> sortedData = data.stream()
+                .sorted((o1, o2) -> o2.getBookingDate().compareTo(o1.getBookingDate()))
+                .collect(Collectors.toList());
+        return FieldBookingDto.fromEntities(sortedData);
     }
 
     public List<FieldBookingDto> searchBooking(SearchBookingQuery query) throws Exception {

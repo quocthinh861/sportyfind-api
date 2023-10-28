@@ -45,6 +45,7 @@ public class UserEntity {
     private String address;
     private Double height;
     private Double weight;
+    private String thumbnail;
 
     public UserEntity() {
         this.roles = List.of(new RoleEntity(1L, "ROLE_USER"));

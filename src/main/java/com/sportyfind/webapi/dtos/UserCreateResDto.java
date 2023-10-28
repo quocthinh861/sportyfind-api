@@ -17,6 +17,9 @@ public class UserCreateResDto {
     public String address;
     public Double height;
     public Double weight;
+    public String thumbnail;
+    public String username;
+
 
     public static UserCreateResDto fromEntity(UserEntity user) {
         UserCreateResDto dto = new UserCreateResDto();
@@ -29,6 +32,8 @@ public class UserCreateResDto {
         dto.phoneNumber = user.getPhoneNumber();
         dto.height = user.getHeight();
         dto.weight = user.getWeight();
+        dto.thumbnail = user.getThumbnail();
+        dto.username = user.getUsername();
         return dto;
     }
 

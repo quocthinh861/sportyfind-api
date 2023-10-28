@@ -51,10 +51,13 @@ public class AuthController {
             // Tạo jwt.
             String token = jwtTokenProvider.generateToken((UserDetails) authentication.getPrincipal());
 
+            // Lấy thông tin người dùng.
+            UserEntity userEntity = userRepository.findByUsername(authLoginReqDto.username);
+
             // Trả về jwt cho người dùng.
             response.result = AuthLoginResDto.builder()
                     .token(token)
-                    .user(authentication.getPrincipal())
+                    .user(UserCreateResDto.fromEntity(userEntity))
                     .build();
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {

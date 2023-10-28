@@ -35,7 +35,7 @@ public class FieldBookingEntity {
     private Time endTime;
 
     @Column(name = "bookingstatus")
-    private String bookingStatus;
+    private String bookingStatus = "NEWLY_CREATED";
 
     @Column(name = "isdeleted")
     private boolean isDeleted;

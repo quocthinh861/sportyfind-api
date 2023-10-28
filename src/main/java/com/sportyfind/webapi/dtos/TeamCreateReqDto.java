@@ -9,4 +9,6 @@ public class TeamCreateReqDto {
     public int rankingorder = 0;
     public String logo;
     public long captainid;
+    public String thumbnail;
+    public int id;
 }

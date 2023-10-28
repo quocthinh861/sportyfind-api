@@ -28,7 +28,7 @@ public class GameRequestEntity {
     @JoinColumn(name = "game_id")
     private GameMatchEntity game;
 
-    @Description("0: pending, 1: accepted, 2: rejected")
+    @Description("0: pending, 1: created, 2: rejected")
     @Column(name = "status")
     private int status;
 
@@ -37,4 +37,6 @@ public class GameRequestEntity {
 
     @Column(name = "updateddate")
     private Date updateddate;
+
+
 }

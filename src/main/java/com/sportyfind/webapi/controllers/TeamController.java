@@ -57,7 +57,7 @@ public class TeamController {
 
 
     @GetMapping("/getTeamListByUserId")
-    public ResponseEntity<Object> getTeamListByCaptainId(@RequestParam Long userId) {
+    public ResponseEntity<Object> getTeamListByUserId(@RequestParam Long userId) {
         HttpStatus status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
@@ -79,6 +79,22 @@ public class TeamController {
             var response = new SuccessResponseDto();
             TeamEntity teamEntity = teamRepository.findById(teamId).orElse(null);
             response.result = TeamCreateResDto.fromEntity(teamEntity);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return null;
+        }
+    }
+
+    @GetMapping("/getTeamByCaptainId")
+    public ResponseEntity<Object> getTeamByCaptainId(@RequestParam int captainId) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            UserTeamEntity userTeamEntity = userTeamRepository.findByUserIdAndRole(captainId, "CAPTAIN");
+            response.result = TeamCreateResDto.fromEntity(userTeamEntity.getTeam());
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;
@@ -161,6 +177,22 @@ public class TeamController {
             ErrorResponseDto response = new ErrorResponseDto();
             response.errors = err;
             return new ResponseEntity<>(null, status);
+        }
+    }
+
+    @PostMapping("/updateTeamThumbnail")
+    public ResponseEntity<Object> updateTeamThumbnail(@RequestBody TeamCreateReqDto reqDto) throws Exception {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = teamService.updateTeamThumbnail(reqDto);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            status = HttpStatus.BAD_REQUEST;
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
         }
     }
 }

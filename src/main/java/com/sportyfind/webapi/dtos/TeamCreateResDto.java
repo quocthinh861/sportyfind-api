@@ -14,6 +14,7 @@ public class TeamCreateResDto {
     public int skilllevel;
     public int id;
     public int size;
+    public String thumbnail;
     public List<UserCreateResDto> users;
 
     public void loadFromEntity(TeamEntity entity) {
@@ -24,6 +25,7 @@ public class TeamCreateResDto {
         this.id = entity.getId();
         this.users = UserCreateResDto.fromEntities(entity.getUsers());
         this.size = Optional.ofNullable(entity.getUsers()).map(List::size).orElse(0);
+        this.thumbnail = entity.getThumbnail();
     }
 
 

@@ -1,8 +1,6 @@
 package com.sportyfind.webapi.services;
 
-import com.sportyfind.webapi.dtos.TeamRequestCreateReqDto;
-import com.sportyfind.webapi.dtos.TeamRequestCreateResDto;
-import com.sportyfind.webapi.dtos.UserTeamCreateReqDto;
+import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.entities.TeamEntity;
 import com.sportyfind.webapi.entities.TeamRequestEntity;
 import com.sportyfind.webapi.entities.UserEntity;
@@ -107,6 +105,16 @@ public class TeamService {
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
         }
+    }
+
+    public Object updateTeamThumbnail(TeamCreateReqDto reqDto) throws Exception {
+        TeamEntity teamEntity = teamRepository.findById(reqDto.id).orElse(null);
+        if(teamEntity == null) {
+            throw new Exception("Cannot find team with id: " + reqDto.id + " to update thumbnail");
+        }
+        teamEntity.setThumbnail(reqDto.thumbnail);
+        TeamEntity team = teamRepository.save(teamEntity);
+        return TeamCreateResDto.fromEntity(team);
     }
 }
 
