@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors(corCustomizer -> {
+                .cors(corCustomizer -> {   
                     CorsConfigurationSource source = request -> {
                         var cors = new org.springframework.web.cors.CorsConfiguration();
                         cors.setAllowCredentials(true);

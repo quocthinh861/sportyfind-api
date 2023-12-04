@@ -28,7 +28,7 @@ public class ReviewEntity {
     private LocalDateTime createdDate;
 
     @Column(name = "score")
-    private double score;
+    private Integer score;
 
     @Column(name = "review")
     private String review;

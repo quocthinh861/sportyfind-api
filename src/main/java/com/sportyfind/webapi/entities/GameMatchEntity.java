@@ -38,10 +38,16 @@ public class GameMatchEntity {
     private String description;
 
     @Column(name = "status")
-    @Description("0: created, 1: matched, 2: removed")
+    @Description("0: created, 1: matched, 2: removed, 3: finished")
     private int status = 0;
 
     @Column(name = "game_type")
     @Description("0: ranking, 1: internal")
     private int gameType = 0;
+
+    @Column(name = "team_a_score")
+    private int teamAScore = 0;
+
+    @Column(name = "team_b_score")
+    private int teamBScore = 0;
 }

@@ -1,14 +1,9 @@
 package com.sportyfind.webapi.services;
 
 import com.sportyfind.webapi.dtos.*;
-import com.sportyfind.webapi.entities.TeamEntity;
-import com.sportyfind.webapi.entities.TeamRequestEntity;
-import com.sportyfind.webapi.entities.UserEntity;
-import com.sportyfind.webapi.entities.UserTeamEntity;
-import com.sportyfind.webapi.repositories.TeamRepository;
-import com.sportyfind.webapi.repositories.TeamRequestRepository;
-import com.sportyfind.webapi.repositories.UserRepository;
-import com.sportyfind.webapi.repositories.UserTeamRepository;
+import com.sportyfind.webapi.entities.*;
+import com.sportyfind.webapi.models.TeamStatictics;
+import com.sportyfind.webapi.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +21,26 @@ public class TeamService {
     private UserRepository userRepository;
 
     @Autowired
+    private GameMatchRepository gameMatchRepository;
+
+    @Autowired
     private TeamRequestRepository teamRequestRepository;
 
     @Autowired
     private UserTeamRepository userTeamRepository;
 
-    public List<TeamEntity> getAllTeams() throws InterruptedException {
-        return teamRepository.findAll();
+    public List<TeamCreateResDto> getAllTeams() throws InterruptedException {
+        List<TeamEntity> teamEntities = teamRepository.findAll();
+        List<TeamCreateResDto> result =  TeamCreateResDto.fromEntities(teamEntities);
+        return result.stream().map(team -> {
+            TeamStatictics statistics = new TeamStatictics();
+            statistics.joinedGame = gameMatchRepository.countGameMatchEntitiesByTeamID(team.id);
+            statistics.wonGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndWinner(team.id);
+            statistics.lostGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndLoser(team.id);
+            statistics.drawGame = statistics.joinedGame - statistics.wonGame - statistics.lostGame;
+            team.statistics = statistics;
+            return team;
+        }).collect(Collectors.toList());
     }
 
     public TeamEntity getTeamById(Integer id) {

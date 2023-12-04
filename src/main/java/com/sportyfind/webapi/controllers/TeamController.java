@@ -43,8 +43,8 @@ public class TeamController {
         HttpStatus status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
-            List<TeamEntity> teamList = teamService.getAllTeams();
-            response.result = TeamCreateResDto.fromEntities(teamList);
+            List<TeamCreateResDto> teamList = teamService.getAllTeams();
+            response.result = teamList;
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;
@@ -115,7 +115,7 @@ public class TeamController {
             teamEntity.setName(reqDto.name);
             teamEntity.setLogo(reqDto.logo);
             teamEntity.setDescription(reqDto.description);
-            teamEntity.setRankingpoint(reqDto.rankingpoint);
+            teamEntity.setLegitpoint(reqDto.legitpoint);
             teamEntity.setSkilllevel(reqDto.skilllevel);
             teamEntity.setRankingorder(reqDto.rankingorder);
             teamEntity = teamRepository.save(teamEntity);

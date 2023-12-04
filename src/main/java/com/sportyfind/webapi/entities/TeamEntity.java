@@ -28,8 +28,8 @@ public class TeamEntity {
     @Column(name = "skilllevel")
     private int skilllevel;
 
-    @Column(name = "rankingpoint")
-    private int rankingpoint;
+    @Column(name = "legitpoint")
+    private int legitpoint;
 
     @Column(name = "logo")
     private String logo;

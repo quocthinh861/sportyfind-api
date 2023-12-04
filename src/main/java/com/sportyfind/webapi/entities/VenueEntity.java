@@ -36,6 +36,18 @@ public class VenueEntity {
     @Column(name = "closinghour")
     private Time closingHour;
 
+    @Column(name = "url")
+    private String url;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
+
     @OneToMany(mappedBy = "venue")
     private List<ReviewEntity> reviews;
+
+    @OneToMany(mappedBy = "venue")
+    private List<FieldEntity> fields;
 }

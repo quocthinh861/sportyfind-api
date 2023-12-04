@@ -27,15 +27,6 @@ public class EventService {
 
     public List<EventResDto> getAllEvent(Long userId) throws Exception {
         List<EventResDto> result = new ArrayList<>();
-        // Get booking event
-        List<FieldBookingDto> bookings = bookingService.getBookingByCustomerId(userId);
-        bookings.stream().map(booking -> {
-            EventResDto event = new EventResDto();
-            event.title = booking.fieldName;
-            event.type = EVENT_TYPE.BOOKING;
-            event.data = booking;
-            return event;
-        }).forEach(result::add);
 
         // Get team list
         List<TeamCreateResDto> teams = TeamCreateResDto.fromEntities(teamService.getAllTeamsByUserId(userId));
@@ -56,6 +47,7 @@ public class EventService {
                     return null;
                 }
 
+                // Add game event
                 EventResDto event = new EventResDto();
                 switch (game.gameType) {
                     case 0:
@@ -67,11 +59,29 @@ public class EventService {
                         break;
                 }
                 event.type = EVENT_TYPE.GAME;
-                event.data = game;
+                event.data = game.booking;
                 return event;
             }).filter(Objects::nonNull).collect(Collectors.toList());
         }).forEach(result::addAll);
 
+
+        // Get booking event
+        List<FieldBookingDto> bookings = bookingService.getBookingByCustomerId(userId);
+        bookings.stream().map(booking -> {
+            EventResDto event = new EventResDto();
+            event.title = booking.fieldName;
+            event.type = EVENT_TYPE.BOOKING;
+            event.data = booking;
+            return event;
+        }).filter(b -> {
+            // check if booking has been added to result
+            return result.stream().noneMatch(event -> {
+                if (event.data instanceof FieldBookingDto) {
+                    return ((FieldBookingDto) event.data).bookingId == ((FieldBookingDto) b.data).bookingId;
+                }
+                return false;
+            });
+        }).forEach(result::add);
 
         // Combine and sort
         return result;

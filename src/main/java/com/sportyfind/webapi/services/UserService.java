@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -84,5 +85,10 @@ public class UserService {
         userEntity.setThumbnail(userCreateResDto.thumbnail);
         UserEntity user = userRepository.save(userEntity);
         return userCreateResDto;
+    }
+
+    public List<UserCreateResDto> getUserByIds(Long[] userIds) {
+        List<UserEntity> userEntities = userRepository.findAllById(Arrays.asList(userIds));
+        return UserCreateResDto.fromEntities(userEntities);
     }
 }

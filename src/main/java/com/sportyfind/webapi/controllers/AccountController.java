@@ -36,13 +36,28 @@ public class AccountController {
         }
     }
 
+    @PostMapping("/getUserInfoByUserIds")
+    public ResponseEntity<Object> getUserInfoByIds(@RequestBody Long[] userIds) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = userService.getUserByIds(userIds);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
     @PostMapping("/updateUserInfo")
     public ResponseEntity<Object> updateUser(@RequestBody UserCreateResDto userCreateResDto) {
         var status = HttpStatus.OK;
         try {
             var response = new SuccessResponseDto();
             response.result = userService.updateUser(userCreateResDto);
-            if(response.result == null) {
+            if (response.result == null) {
                 status = HttpStatus.BAD_REQUEST;
             }
             return new ResponseEntity<>(response, status);
@@ -60,7 +75,7 @@ public class AccountController {
         try {
             var response = new SuccessResponseDto();
             response.result = userService.updateThumbnail(userCreateResDto);
-            if(response.result == null) {
+            if (response.result == null) {
                 status = HttpStatus.BAD_REQUEST;
             }
             return new ResponseEntity<>(response, status);

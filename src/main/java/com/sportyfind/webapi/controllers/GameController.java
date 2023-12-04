@@ -19,6 +19,22 @@ public class GameController {
     @Autowired
     private GameRequestRepository gameRequestRepository;
 
+    @PostMapping("/updateGameResult")
+    public ResponseEntity<Object> updateGameResult(@RequestBody GameMatchCreateReqDto gameDTO) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = gameService.updateGameResult(gameDTO);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            response.message = err.getMessage();
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
     @PostMapping("/createMatch")
     public ResponseEntity<Object> createGame(@RequestBody GameMatchCreateReqDto gameDTO) {
         var status = HttpStatus.OK;

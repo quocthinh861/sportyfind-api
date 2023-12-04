@@ -6,4 +6,7 @@ public class GameMatchCreateReqDto {
     public Integer gameType;
     public Integer bookingId;
     public String description;
+    public int teamAScore;
+    public int teamBScore;
+    public int id;
 }
