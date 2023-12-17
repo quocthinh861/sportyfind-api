@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -25,7 +26,7 @@ public class ReviewEntity {
     private UserEntity customer;
 
     @Column(name = "createddate")
-    private LocalDateTime createdDate;
+    private Date createdDate;
 
     @Column(name = "score")
     private Integer score;

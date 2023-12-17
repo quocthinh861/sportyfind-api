@@ -40,4 +40,7 @@ public class FieldEntity {
 
     @Column(name = "hourlyrate")
     private double hourlyRate;
+
+    @Column(name = "thumbnail")
+    private String thumbnail;
 }

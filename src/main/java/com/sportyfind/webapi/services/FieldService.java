@@ -42,8 +42,7 @@ public class FieldService {
             return null;
         }
 
-        FieldCreateDto result = new FieldCreateDto();
-        result.fieldName = field.getFieldName();
+        FieldCreateDto result = FieldCreateDto.fromEntity(field);
         result.venue = VenueCreateDto.fromEntity(venue);
 
         return result;

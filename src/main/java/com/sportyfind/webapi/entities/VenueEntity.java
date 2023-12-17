@@ -24,11 +24,20 @@ public class VenueEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "latitude")
-    private BigDecimal latitude;
+    @Column(name = "district")
+    private String district;
 
-    @Column(name = "longitude")
-    private BigDecimal longitude;
+    @Column(name = "province")
+    private String province;
+
+    @Column(name = "ward")
+    private String ward;
+
+    @Column(name = "lati")
+    private String lati;
+
+    @Column(name = "longti")
+    private String longti;
 
     @Column(name = "openinghour")
     private Time openingHour;
@@ -44,6 +53,10 @@ public class VenueEntity {
 
     @Column(name = "thumbnail")
     private String thumbnail;
+
+
+    @Column(name = "additionalInfo", columnDefinition = "TEXT", length = 65535)
+    private String additionalInfo;
 
     @OneToMany(mappedBy = "venue")
     private List<ReviewEntity> reviews;

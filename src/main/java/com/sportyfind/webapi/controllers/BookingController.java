@@ -34,6 +34,21 @@ public class BookingController {
         }
     }
 
+    @PostMapping("/checkAvailability")
+    public ResponseEntity<Object> checkAvailable(@RequestBody FieldBookingDto bookingDTO) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = bookingService.checkAvailableTime(bookingDTO);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
 
     @GetMapping("/getBookingListByCustomerId")
     public ResponseEntity<Object> getBookingByCustomerId(@RequestParam Long customerId) {

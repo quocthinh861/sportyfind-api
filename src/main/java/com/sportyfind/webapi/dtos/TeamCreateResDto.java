@@ -18,6 +18,7 @@ public class TeamCreateResDto {
     public int size;
     public String thumbnail;
     public List<UserCreateResDto> users;
+    public Long captainId;
     public TeamStatictics statistics;
 
     public void loadFromEntity(TeamEntity entity) {

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,6 +47,15 @@ public class UserService {
         userEntity.setHeight(userCreateResDto.height);
         userEntity.setWeight(userCreateResDto.weight);
         userEntity.setPhoneNumber(userCreateResDto.phoneNumber);
+        userEntity.setAddress(userCreateResDto.address);
+        if(userCreateResDto.birthday != null && !userCreateResDto.birthday.isEmpty()) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                userEntity.setBirthday(formatter.parse(userCreateResDto.birthday));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         UserEntity user = userRepository.save(userEntity);
         if(user == null) {
             return null;

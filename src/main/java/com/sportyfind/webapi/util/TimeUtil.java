@@ -14,4 +14,10 @@ public class TimeUtil {
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         return formatter.parse(date);
     }
+
+    public static String formatDateToString (Date date, String format) {
+        if(date == null) return null;
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return formatter.format(date);
+    }
 }

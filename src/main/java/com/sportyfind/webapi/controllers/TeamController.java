@@ -78,7 +78,13 @@ public class TeamController {
         try {
             var response = new SuccessResponseDto();
             TeamEntity teamEntity = teamRepository.findById(teamId).orElse(null);
-            response.result = TeamCreateResDto.fromEntity(teamEntity);
+            TeamCreateResDto teamCreateResDto = TeamCreateResDto.fromEntity(teamEntity);
+            // find team captain
+            UserTeamEntity userTeamEntity = userTeamRepository.findByTeamIdAndRole(teamId, "CAPTAIN");
+            if(userTeamEntity != null) {
+                teamCreateResDto.captainId = userTeamEntity.getUser().getId();
+            }
+            response.result = teamCreateResDto;
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {
             status = HttpStatus.BAD_REQUEST;

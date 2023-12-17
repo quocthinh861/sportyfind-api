@@ -34,6 +34,20 @@ public class BookingService {
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("H:mm");
 
+    public boolean checkAvailableTime(FieldBookingDto fieldBookingDto) throws Exception {
+        LocalTime startTime = LocalTime.parse(fieldBookingDto.startTime, formatter);
+        LocalTime endTime = LocalTime.parse(fieldBookingDto.endTime, formatter);
+        Time startTimeSql = Time.valueOf(startTime);
+        Time endTimeSql = Time.valueOf(endTime);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date bookingDate = dateFormat.parse(fieldBookingDto.bookingDate);
+
+        List<FieldBookingEntity> bookings = fieldBookingRepository.findByFieldIdAndBookingDateAndStartTimeOrEndTime(
+                fieldBookingDto.fieldId, bookingDate, startTimeSql, endTimeSql);
+
+        return bookings.size() == 0;
+    }
+
     public FieldBookingDto createBooking(FieldBookingDto bookingDTO) throws Exception {
         var result = new FieldBookingDto();
 
@@ -45,6 +59,12 @@ public class BookingService {
         FieldBookingEntity booking = new FieldBookingEntity();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
         Date bookingDate = dateFormat.parse(bookingDTO.bookingDate);
+
+        if (checkAvailableTime(bookingDTO) == false) {
+            throw new Exception("Time is not available");
+        }
+
+
         booking.setCustomer(customer);
         booking.setField(field);
         booking.setBookingDate(bookingDate);
@@ -75,7 +95,8 @@ public class BookingService {
         Date beginDate = TimeUtil.formatStringToDate(query.beginDate);
         Date endDate = TimeUtil.formatStringToDate(query.endDate);
 
-        var data = fieldBookingRepository.searchFieldBookingWithQuery(query.customerId, query.fieldId, beginDate, endDate);
+
+        var data = fieldBookingRepository.searchFieldBookingWithQuery(query.customerId, query.fieldId, beginDate, endDate, query.status);
         return FieldBookingDto.fromEntities(data);
     }
 }

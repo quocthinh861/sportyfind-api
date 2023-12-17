@@ -26,7 +26,7 @@ public class UserCreateResDto {
         dto.id = user.getId();
         dto.email = user.getEmail();
         dto.address = user.getAddress();
-        dto.birthday = TimeUtil.formatDateToString(user.getBirthday());
+        dto.birthday = TimeUtil.formatDateToString(user.getBirthday(), "YYYY-MM-dd");
         dto.gender = user.getGender();
         dto.fullName = user.getFullName();
         dto.phoneNumber = user.getPhoneNumber();
