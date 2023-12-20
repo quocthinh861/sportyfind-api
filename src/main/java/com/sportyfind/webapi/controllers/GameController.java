@@ -1,6 +1,8 @@
 package com.sportyfind.webapi.controllers;
 
 import com.sportyfind.webapi.dtos.*;
+import com.sportyfind.webapi.models.CustomGameInfo;
+import com.sportyfind.webapi.models.GameMatchUserResDto;
 import com.sportyfind.webapi.repositories.GameRequestRepository;
 import com.sportyfind.webapi.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,6 +110,36 @@ public class GameController {
             status = HttpStatus.BAD_REQUEST;
             response.errors = err;
             return new ResponseEntity<>(response, status);
+        }
+    }
+
+    @GetMapping("/getCustomGameMatchInfo")
+    public ResponseEntity<Object> getCustomGameMatchInfo(@RequestParam int gameId, @RequestParam int userId) {
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = gameService.getCustomGameMatchInfo(gameId, userId);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(null, status);
+        }
+    }
+
+    @PostMapping("/updateCustomGameMatchInfo")
+    public ResponseEntity<Object> updateCustomGameMatchInfo(@RequestBody GameMatchUserResDto gameMatchUserResDto) {
+        HttpStatus status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            response.result = gameService.updateCustomGameMatchInfo(gameMatchUserResDto);
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            status = HttpStatus.BAD_REQUEST;
+            ErrorResponseDto response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(null, status);
         }
     }
 }

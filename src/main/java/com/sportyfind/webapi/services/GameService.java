@@ -4,11 +4,14 @@ import com.sportyfind.webapi.dtos.*;
 import com.sportyfind.webapi.entities.*;
 import com.sportyfind.webapi.enums.GAME_MATCH_STATUS;
 import com.sportyfind.webapi.enums.REQ_ACTION;
+import com.sportyfind.webapi.models.CustomGameInfo;
 import com.sportyfind.webapi.models.GameMatchInfo;
+import com.sportyfind.webapi.models.GameMatchUserResDto;
 import com.sportyfind.webapi.models.SearchGameMatchQuery;
 import com.sportyfind.webapi.repositories.*;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,10 +33,16 @@ public class GameService {
     private UserTeamRepository userTeamRepository;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private FieldBookingRepository fieldBookingRepository;
 
     @Autowired
     private GameRequestRepository gameRequestRepository;
+
+    @Autowired
+    private GameMatchUserRepository gameMatchUserRepository;
 
     public List<GameMatchCreateResDto> searchGameMatch(SearchGameMatchQuery query) {
         List<GameMatchEntity> gameMatchEntities = null;
@@ -101,9 +110,12 @@ public class GameService {
                     result.booking = FieldBookingDto.fromEntity(gameMatch.getFieldBooking());
                     result.id = gameMatch.getId();
                     result.status = gameMatch.getStatus();
+                    result.teamAScore = gameMatch.getTeamAScore();
+                    result.teamBScore = gameMatch.getTeamBScore();
                     // get captain team A
                     UserTeamEntity userTeamEntity = userTeamRepository.findByTeamIdAndRole(teamA.getId(), "CAPTAIN");
-                    result.host = UserCreateResDto.fromEntity(userTeamEntity.getUser());
+                    if(userTeamEntity != null)
+                        result.host = UserCreateResDto.fromEntity(userTeamEntity.getUser());
                     return result;
                 })
                 .sorted(Comparator.comparingLong(GameMatchCreateResDto::getStatus)
@@ -160,6 +172,10 @@ public class GameService {
             gameRequest.setTeam(team);
             gameRequest.setStatus(1);
             gameRequest.setCreateddate(new java.util.Date());
+        } else if(reqDto.action == REQ_ACTION.CANCEL) {
+            gameRequestRepository.deleteByTeamIdAndGameId(reqDto.teamId, reqDto.gameId);
+            gameMatchRepository.deleteById(reqDto.gameId);
+            return null;
         } else if (reqDto.action == REQ_ACTION.REMOVE) {
             gameRequestRepository.deleteByTeamIdAndGameId(reqDto.teamId, reqDto.gameId);
             return null;
@@ -203,9 +219,9 @@ public class GameService {
         }
 
         //check if the game is finished by compare the timne of the game with the current time of booking
-        if (gameMatch.getFieldBooking().getBookingDate().after(new Date())) {
-            throw new RuntimeException("Game is not finished yet");
-        }
+//        if (gameMatch.getFieldBooking().getBookingDate().after(new Date())) {
+//            throw new RuntimeException("Game is not finished yet");
+//        }
 
         // update team point
         TeamEntity teamA = gameMatch.getTeamA();
@@ -226,13 +242,16 @@ public class GameService {
         gameMatch.setStatus(GAME_MATCH_STATUS.FINISHED.getStatus());
         gameMatch.setTeamAScore(gameDTO.teamAScore);
         gameMatch.setTeamBScore(gameDTO.teamBScore);
-        gameMatchRepository.save(gameMatch);
 
 
         if (gameDTO.teamAScore > gameDTO.teamBScore) {
             teamA.setSkilllevel(teamA.getSkilllevel() + 3);
+            gameMatch.setWinner(teamA.getId());
+            gameMatch.setLoser(teamB.getId());
         } else if (gameDTO.teamAScore < gameDTO.teamBScore) {
             teamB.setSkilllevel(teamB.getSkilllevel() + 3);
+            gameMatch.setWinner(teamB.getId());
+            gameMatch.setLoser(teamA.getId());
         } else {
             teamA.setSkilllevel(teamA.getSkilllevel() + 1);
             teamB.setSkilllevel(teamB.getSkilllevel() + 1);
@@ -240,7 +259,69 @@ public class GameService {
 
         teamRepository.save(teamA);
         teamRepository.save(teamB);
+        gameMatchRepository.save(gameMatch);
 
         return GameMatchCreateResDto.fromEntity(gameMatch);
+    }
+
+    public CustomGameInfo getCustomGameMatchInfo(int gameId, int userId) {
+        GameMatchEntity gameMatch = gameMatchRepository.findById(gameId).orElse(null);
+        if (gameMatch == null) {
+            throw new RuntimeException("Game not found with id: " + gameId);
+        }
+
+        List<GameMatchUserEntity> gameMatchUsers = gameMatchUserRepository.findByGameMatchId(gameId);
+        if(gameMatchUsers == null) {
+            throw new RuntimeException("Game not found with id: " + gameId);
+        }
+
+        GameMatchUserEntity gameUser = gameMatchUsers.stream().filter(gameMatchUserEntity -> gameMatchUserEntity.getUser().getId() == userId).findFirst().orElse(null);
+
+
+        Integer noJoin = gameMatchUsers.stream().filter(gameMatchUser -> gameMatchUser.getStatus() == 0)
+                .collect(Collectors.toList()).size();
+
+        Integer noReject = gameMatchUsers.stream().filter(gameMatchUser -> gameMatchUser.getStatus() == 1)
+                .collect(Collectors.toList()).size();
+
+        Integer noWait = gameMatchUsers.stream().filter(gameMatchUser -> gameMatchUser.getStatus() == 2)
+                .collect(Collectors.toList()).size();
+
+
+        CustomGameInfo customGameInfo = new CustomGameInfo();
+        customGameInfo.noJoin = noJoin;
+        customGameInfo.noReject = noReject;
+        customGameInfo.noWait = noWait;
+        customGameInfo.status = gameUser != null ?gameUser.getStatus() : null;
+
+        return customGameInfo;
+    }
+
+    public GameMatchUserResDto updateCustomGameMatchInfo(GameMatchUserResDto gameMatchUserResDto) {
+        GameMatchEntity gameMatch = gameMatchRepository.findById(gameMatchUserResDto.gameMatchId).orElse(null);
+        if (gameMatch == null) {
+            throw new RuntimeException("Game not found with id: " + gameMatchUserResDto.gameMatchId);
+        }
+
+        UserEntity user = userRepository.findById(gameMatchUserResDto.userId).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("User not found with id: " + gameMatchUserResDto.userId);
+        }
+
+        // check existing game match user
+        GameMatchUserEntity gameMatchUserEntity = gameMatchUserRepository.findByGameMatchIdAndUserId(gameMatchUserResDto.gameMatchId, gameMatchUserResDto.userId);
+        if(gameMatchUserEntity != null) {
+            gameMatchUserEntity.setStatus(gameMatchUserResDto.status);
+            GameMatchUserEntity result = gameMatchUserRepository.save(gameMatchUserEntity);
+            return GameMatchUserResDto.fromEntity(result);
+        }
+
+        GameMatchUserEntity gameMatchUser = new GameMatchUserEntity();
+        gameMatchUser.setGameMatch(gameMatch);
+        gameMatchUser.setUser(user);
+        gameMatchUser.setStatus(gameMatchUserResDto.status);
+
+        GameMatchUserEntity result = gameMatchUserRepository.save(gameMatchUser);
+        return GameMatchUserResDto.fromEntity(result);
     }
 }

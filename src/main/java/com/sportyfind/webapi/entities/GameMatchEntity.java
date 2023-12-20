@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -50,4 +51,10 @@ public class GameMatchEntity {
 
     @Column(name = "team_b_score")
     private int teamBScore = 0;
+
+    @Column(name = "winner_team_id")
+    private Integer winner = 0;
+
+    @Column(name = "loser_team_id")
+    private Integer loser = 0;
 }

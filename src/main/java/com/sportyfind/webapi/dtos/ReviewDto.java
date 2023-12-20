@@ -14,13 +14,21 @@ public class ReviewDto {
     public String content;
     public Integer rating;
     public Timestamp createdDate;
+    public Long userId;
+    public Integer venueId;
+
+
 
     public static ReviewDto fromEntity(ReviewEntity entity) {
         var result = new ReviewDto();
         result.username = entity.getCustomer().getUsername();
         result.content = entity.getReview();
         result.rating = entity.getScore();
-        result.createdDate = (Timestamp) entity.getCreatedDate();
+
+        // convert Date to Timestamp
+        Date date = entity.getCreatedDate();
+        result.createdDate = new Timestamp(date.getTime());
+
         return result;
     }
 

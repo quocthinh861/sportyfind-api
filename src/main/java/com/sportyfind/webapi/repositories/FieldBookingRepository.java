@@ -21,7 +21,7 @@ public interface FieldBookingRepository extends JpaRepository<FieldBookingEntity
 
 
     // query to check if the field is available at the time
-    @Query("SELECT fb FROM FieldBookingEntity fb WHERE fb.field.fieldId = :fieldId AND fb.bookingDate <= :bookingDate AND (fb.startTime BETWEEN :startTime AND :endTime OR fb.endTime BETWEEN :startTime AND :endTime)")
+    @Query("SELECT fb FROM FieldBookingEntity fb WHERE fb.field.fieldId = :fieldId AND fb.bookingDate = :bookingDate AND (fb.startTime BETWEEN :startTime AND :endTime OR fb.endTime BETWEEN :startTime AND :endTime)")
     List<FieldBookingEntity> findByFieldIdAndBookingDateAndStartTimeOrEndTime(@Param("fieldId") Integer fieldId,
                                                                                @Param("bookingDate") Date bookingDate,
                                                                                @Param("startTime") Time startTime,

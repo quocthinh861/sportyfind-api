@@ -13,6 +13,8 @@ public class GameMatchCreateResDto {
     public int id;
     public int status;
     public int gameType;
+    public Integer teamAScore;
+    public Integer teamBScore;
 
     public static GameMatchCreateResDto fromEntity(GameMatchEntity entity) {
         GameMatchCreateResDto result = new GameMatchCreateResDto();
@@ -21,6 +23,10 @@ public class GameMatchCreateResDto {
         result.booking = FieldBookingDto.fromEntity(entity.getFieldBooking());
         result.description = entity.getDescription();
         result.id = entity.getId();
+        result.status = entity.getStatus();
+        result.gameType = entity.getGameType();
+        result.teamAScore = entity.getTeamAScore();
+        result.teamBScore = entity.getTeamBScore();
         return result;
     }
 

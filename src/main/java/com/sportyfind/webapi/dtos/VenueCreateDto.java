@@ -8,6 +8,7 @@ import java.sql.Time;
 import java.util.List;
 
 public class VenueCreateDto {
+    public Integer venueId;
     public String address;
     public String district;
     public String province;
@@ -32,10 +33,13 @@ public class VenueCreateDto {
         result.additionalInfo = entity.getAdditionalInfo();
         result.latitude = entity.getLati();
         result.longitude = entity.getLongti();
+        // sort reviews by createdDate;
+        entity.getReviews().sort((a, b) -> b.getCreatedDate().compareTo(a.getCreatedDate()));
         result.reviews = ReviewDto.fromEntities(entity.getReviews());
         result.district = entity.getDistrict();
         result.province = entity.getProvince();
         result.ward = entity.getWard();
+        result.venueId = entity.getVenueId();
         return result;
     }
 }

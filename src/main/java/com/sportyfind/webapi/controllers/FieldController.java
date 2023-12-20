@@ -1,6 +1,7 @@
 package com.sportyfind.webapi.controllers;
 
 import com.sportyfind.webapi.dtos.ErrorResponseDto;
+import com.sportyfind.webapi.dtos.ReviewDto;
 import com.sportyfind.webapi.dtos.SuccessResponseDto;
 import com.sportyfind.webapi.entities.FieldEntity;
 import com.sportyfind.webapi.repositories.FieldRepository;
@@ -56,6 +57,21 @@ public class FieldController {
         try {
             var response = new SuccessResponseDto();
             var field = fieldService.getFieldDetailById(fieldId);
+            response.result = field;
+            return new ResponseEntity<>(response, status);
+        } catch (Exception err) {
+            var response = new ErrorResponseDto();
+            response.errors = err;
+            return new ResponseEntity<>(response, status);
+        }
+    }
+
+    @PostMapping("/submitReview")
+    public ResponseEntity<Object> submitReview(@RequestBody ReviewDto reviewDto) {
+        var status = HttpStatus.OK;
+        try {
+            var response = new SuccessResponseDto();
+            var field = fieldService.submitReview(reviewDto);
             response.result = field;
             return new ResponseEntity<>(response, status);
         } catch (Exception err) {

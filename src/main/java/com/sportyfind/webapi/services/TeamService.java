@@ -31,16 +31,20 @@ public class TeamService {
 
     public List<TeamCreateResDto> getAllTeams() throws InterruptedException {
         List<TeamEntity> teamEntities = teamRepository.findAll();
-        List<TeamCreateResDto> result =  TeamCreateResDto.fromEntities(teamEntities);
+        List<TeamCreateResDto> result = TeamCreateResDto.fromEntities(teamEntities);
+
         return result.stream().map(team -> {
-            TeamStatictics statistics = new TeamStatictics();
-            statistics.joinedGame = gameMatchRepository.countGameMatchEntitiesByTeamID(team.id);
-            statistics.wonGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndWinner(team.id);
-            statistics.lostGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndLoser(team.id);
-            statistics.drawGame = statistics.joinedGame - statistics.wonGame - statistics.lostGame;
-            team.statistics = statistics;
-            return team;
-        }).collect(Collectors.toList());
+                    TeamStatictics statistics = new TeamStatictics();
+                    statistics.joinedGame = gameMatchRepository.countGameMatchEntitiesByTeamID(team.id);
+                    statistics.wonGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndWinner(team.id);
+                    statistics.lostGame = gameMatchRepository.countGameMatchEntitiesByTeamIDAndLoser(team.id);
+                    statistics.drawGame = statistics.joinedGame - statistics.wonGame - statistics.lostGame;
+                    team.statistics = statistics;
+                    return team;
+                }).sorted((team1, team2) -> {
+                    return team1.id < team2.id ? 1 : -1;
+                })
+                .collect(Collectors.toList());
     }
 
     public TeamEntity getTeamById(Integer id) {
@@ -58,14 +62,14 @@ public class TeamService {
     @Transactional
     public TeamRequestCreateResDto updateTeamRequest(TeamRequestCreateReqDto reqDto) {
         var teamRequest = new TeamRequestEntity();
-        if(Objects.equals(reqDto.action, "CREATE")) {
+        if (Objects.equals(reqDto.action, "CREATE")) {
             UserEntity user = userRepository.findById(reqDto.userId).orElse(null);
             TeamEntity team = teamRepository.findById(reqDto.teamId).orElse(null);
             teamRequest.setUser(user);
             teamRequest.setTeam(team);
             teamRequest.setStatus(1);
             teamRequest.setCreateddate(new java.util.Date());
-        } else if(Objects.equals(reqDto.action, "ACCEPT")) {
+        } else if (Objects.equals(reqDto.action, "ACCEPT")) {
             teamRequest = teamRequestRepository.findByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
             teamRequest.setStatus(2);
             UserEntity user = userRepository.findById(reqDto.userId).orElse(null);
@@ -74,10 +78,10 @@ public class TeamService {
             userTeam.setUser(user);
             userTeam.setTeam(team);
             userTeamRepository.save(userTeam);
-        } else if(Objects.equals(reqDto.action, "CANCEL")) {
+        } else if (Objects.equals(reqDto.action, "CANCEL")) {
             teamRequestRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
             return null;
-        } else if(Objects.equals(reqDto.action, "REMOVE")) {
+        } else if (Objects.equals(reqDto.action, "REMOVE")) {
             teamRequestRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
             userTeamRepository.deleteByUserIdAndTeamId(reqDto.userId, reqDto.teamId);
             return null;
@@ -89,14 +93,14 @@ public class TeamService {
         try {
             // check user in team
             UserTeamEntity userTeam = userTeamRepository.findByUserIdAndTeamId(userId, teamId);
-            if(userTeam != null) {
-                TeamRequestCreateResDto res =  new TeamRequestCreateResDto();
+            if (userTeam != null) {
+                TeamRequestCreateResDto res = new TeamRequestCreateResDto();
                 res.userId = userId;
                 res.teamId = teamId;
                 res.status = 2;
                 return res;
             }
-            TeamRequestEntity teamRequest =  teamRequestRepository.findByUserIdAndTeamId(userId, teamId);
+            TeamRequestEntity teamRequest = teamRequestRepository.findByUserIdAndTeamId(userId, teamId);
             return teamRequest != null ? TeamRequestCreateResDto.fromEntity(teamRequest) : null;
         } catch (Exception ex) {
             throw new Exception(ex.getMessage());
@@ -105,7 +109,7 @@ public class TeamService {
 
     public List<TeamEntity> getAllTeamsByUserId(long userId) throws Exception {
         try {
-            List<UserTeamEntity> userTeams =  userTeamRepository.findAllByUserId(userId);
+            List<UserTeamEntity> userTeams = userTeamRepository.findAllByUserId(userId);
             List<TeamEntity> teams = userTeams.stream()
                     .map(UserTeamEntity::getTeam) // Map to TeamEntity objects
                     .collect(Collectors.toList());
@@ -117,7 +121,7 @@ public class TeamService {
 
     public Object updateTeamThumbnail(TeamCreateReqDto reqDto) throws Exception {
         TeamEntity teamEntity = teamRepository.findById(reqDto.id).orElse(null);
-        if(teamEntity == null) {
+        if (teamEntity == null) {
             throw new Exception("Cannot find team with id: " + reqDto.id + " to update thumbnail");
         }
         teamEntity.setThumbnail(reqDto.thumbnail);
