@@ -231,11 +231,13 @@ public class GameService {
             // if the game is already finished, we need to reset the point of the team
             if (gameMatch.getTeamAScore() > gameMatch.getTeamBScore()) {
                 teamA.setSkilllevel(teamA.getSkilllevel() - 3);
+                teamA.setRankingpoint(teamA.getRankingpoint() - 3);
             } else if (gameMatch.getTeamAScore() < gameMatch.getTeamBScore()) {
                 teamB.setSkilllevel(teamB.getSkilllevel() - 3);
+                teamB.setRankingpoint(teamB.getRankingpoint() - 3);
             } else {
-                teamA.setSkilllevel(teamA.getSkilllevel() - 1);
-                teamB.setSkilllevel(teamB.getSkilllevel() - 1);
+                teamA.setSkilllevel(teamA.getSkilllevel() +  1);
+                teamB.setSkilllevel(teamB.getSkilllevel() + 1);
             }
         }
 

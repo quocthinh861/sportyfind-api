@@ -5,6 +5,7 @@ public class TeamCreateReqDto {
     public int size = 1;
     public String description;
     public int skilllevel;
+    public int rankingpoint = 100;
     public int legitpoint =  100;
     public int rankingorder = 0;
     public String logo;

@@ -20,7 +20,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/team")
-@PreAuthorize("hasRole('USER')")
 public class TeamController {
 
     @Autowired
@@ -124,6 +123,7 @@ public class TeamController {
             teamEntity.setLegitpoint(reqDto.legitpoint);
             teamEntity.setSkilllevel(reqDto.skilllevel);
             teamEntity.setRankingorder(reqDto.rankingorder);
+            teamEntity.setRankingpoint(reqDto.rankingpoint);
             teamEntity = teamRepository.save(teamEntity);
             response.result = TeamCreateResDto.fromEntity(teamEntity);
             // Create a UserTeamEntity to represent the relationship

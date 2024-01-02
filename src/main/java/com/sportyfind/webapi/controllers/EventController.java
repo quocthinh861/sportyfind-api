@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/event")
-@PreAuthorize("hasRole('USER')")
 public class EventController {
     @Autowired
     EventService eventService;

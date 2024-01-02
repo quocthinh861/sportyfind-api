@@ -92,11 +92,22 @@ public class BookingService {
     }
 
     public List<FieldBookingDto> searchBooking(SearchBookingQuery query) throws Exception {
-        Date beginDate = TimeUtil.formatStringToDate(query.beginDate);
-        Date endDate = TimeUtil.formatStringToDate(query.endDate);
+        Date beginDate = TimeUtil.formatStringToDate(query.beginDate, "MM/dd/yyyy");
+        Date endDate = TimeUtil.formatStringToDate(query.endDate, "MM/dd/yyyy");
 
 
-        var data = fieldBookingRepository.searchFieldBookingWithQuery(query.customerId, query.fieldId, beginDate, endDate, query.status);
+        var data = fieldBookingRepository.searchFieldBookingWithQuery(query.customerId, beginDate, endDate, query.status);
         return FieldBookingDto.fromEntities(data);
+    }
+
+    public FieldBookingDto deleteBooking(FieldBookingDto bookingDTO) {
+        var result = new FieldBookingDto();
+
+        FieldBookingEntity booking = fieldBookingRepository.findById(bookingDTO.bookingId).orElse(null);
+        if (booking != null) {
+            fieldBookingRepository.delete(booking);
+            result.loadFromEntity(booking);
+        }
+        return result;
     }
 }

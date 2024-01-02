@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/game")
-@PreAuthorize("hasRole('USER')")
 public class GameController {
 
     @Autowired

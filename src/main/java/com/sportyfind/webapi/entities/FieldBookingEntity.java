@@ -5,7 +5,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -33,6 +35,10 @@ public class FieldBookingEntity {
 
     @Column(name = "endtime")
     private Time endTime;
+
+    @OneToMany(mappedBy = "fieldBooking", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<GameMatchEntity> gameMatches = new ArrayList<>();
+
 
     @Column(name = "bookingstatus")
     private String bookingStatus = "NEWLY_CREATED";

@@ -12,9 +12,8 @@ import java.util.List;
 public interface FieldBookingRepository extends JpaRepository<FieldBookingEntity, Integer> {
     List<FieldBookingEntity> findByCustomerId(Long customerId);
 
-    @Query("SELECT fb FROM FieldBookingEntity fb WHERE fb.customer.id = :customerId AND fb.field.fieldId = :fieldId AND fb.bookingDate BETWEEN :beginDate AND :endDate AND (:status IS NULL OR fb.bookingStatus = :status)")
+    @Query("SELECT fb FROM FieldBookingEntity fb WHERE fb.customer.id = :customerId AND fb.bookingDate BETWEEN :beginDate AND :endDate AND (:status IS NULL OR fb.bookingStatus = :status)")
     List<FieldBookingEntity> searchFieldBookingWithQuery(@Param("customerId") Long customerId,
-                                                         @Param("fieldId") Integer fieldId,
                                                          @Param("beginDate") Date beginDate,
                                                          @Param("endDate") Date endDate,
                                                          @Param("status") String status);

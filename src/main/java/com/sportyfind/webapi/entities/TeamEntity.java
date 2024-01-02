@@ -42,4 +42,7 @@ public class TeamEntity {
 
     @Column(name = "thumbnail")
     private String thumbnail;
+
+    @Column(name = "rankingpoint")
+    private int rankingpoint;
 }

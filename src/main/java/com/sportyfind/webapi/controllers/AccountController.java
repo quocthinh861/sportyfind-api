@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/account")
-@PreAuthorize("hasRole('USER')")
 public class AccountController {
     @Autowired
     UserService userService;

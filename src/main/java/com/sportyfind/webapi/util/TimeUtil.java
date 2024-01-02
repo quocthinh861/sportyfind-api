@@ -15,6 +15,11 @@ public class TimeUtil {
         return formatter.parse(date);
     }
 
+    public static Date formatStringToDate (String date, String format) throws Exception {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        return formatter.parse(date);
+    }
+
     public static String formatDateToString (Date date, String format) {
         if(date == null) return null;
         SimpleDateFormat formatter = new SimpleDateFormat(format);
